@@ -6,30 +6,32 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.Toast;
+import android.util.Log;
 
-import com.example.andres.controlgasto.HomeActivity;
 import com.example.andres.controlgasto.database.model.Expense;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+import static android.content.ContentValues.TAG;
+
+public class SQLiteAccess extends SQLiteOpenHelper implements DatabaseAccess {
     // Database Version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "gastos_db";
+    private static final String DATABASE_NAME = "expenses_db";
 
+    private Context context;
 
-    public DatabaseHelper(Context context) {
+    public SQLiteAccess(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-
         // create notes table
         db.execSQL(Expense.CREATE_TABLE);
     }
@@ -58,6 +60,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Expense.COLUMN_CURRENCY, currency);
 
         long id = db.insert(Expense.TABLE_NAME, null, values);
+
+        Log.i(TAG, "asdf: " + context.getDatabasePath(DATABASE_NAME));
 
         /* Close db connection */
         db.close();

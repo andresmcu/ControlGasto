@@ -3,14 +3,14 @@ package com.example.andres.controlgasto.database.model;
 import java.util.List;
 
 public class Expense {
-    public static final String TABLE_NAME = "Expense";
+    public static final String TABLE_NAME = "Expenses";
     public static final String COLUMN_ID = "id";
-    public static final String COLUMN_NAME = "name";
     public static final String COLUMN_DATE = "date";
-    public static final String COLUMN_TYPE = "type";
+    public static final String COLUMN_NAME = "name";
     public static final String COLUMN_AMOUNT = "amount";
-    public static final String COLUMN_CURRENCY = "currency";
+    public static final String COLUMN_TYPE = "type";
     public static final String COLUMN_CATEGORIES = "categories";
+    public static final String COLUMN_CURRENCY = "currency";
 
     private int ID;
     private String Name;

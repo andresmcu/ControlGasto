@@ -1,11 +1,9 @@
 package com.example.andres.controlgasto;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -19,7 +17,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.andres.controlgasto.database.DatabaseHelper;
+import com.example.andres.controlgasto.database.DatabaseAccess;
+import com.example.andres.controlgasto.database.SQLiteAccess;
 import com.example.andres.controlgasto.database.model.Expense;
 import com.example.andres.controlgasto.utils.MyDividerItemDecoration;
 import com.example.andres.controlgasto.utils.RecyclerTouchListener;
@@ -38,24 +37,24 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TextView noNotesView;
 
-    private DatabaseHelper db;
+    private DatabaseAccess db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         coordinatorLayout = findViewById(R.id.coordinator_layout);
         recyclerView = findViewById(R.id.recycler_view);
         noNotesView = findViewById(R.id.empty_expenses_view);
 
-        db = new DatabaseHelper(this);
+        db = new SQLiteAccess(this);
 
         expensesList.addAll(db.getAllExpenses());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
