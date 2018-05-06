@@ -46,18 +46,18 @@ public class SQLiteAccess extends SQLiteOpenHelper implements DatabaseAccess {
         onCreate(db);
     }
 
-    public long insertExpense(String date, String name, Double amount, String type, String categories, String currency){
+    public long insertExpense(Expense expense){
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         // `id` and `timestamp` will be inserted automatically.
-        values.put(Expense.COLUMN_DATE, date);
-        values.put(Expense.COLUMN_NAME, name);
-        values.put(Expense.COLUMN_AMOUNT, amount);
-        values.put(Expense.COLUMN_TYPE, type);
-        values.put(Expense.COLUMN_CATEGORIES, categories);
-        values.put(Expense.COLUMN_CURRENCY, currency);
+        values.put(Expense.COLUMN_DATE, expense.getDate());
+        values.put(Expense.COLUMN_NAME, expense.getName());
+        values.put(Expense.COLUMN_AMOUNT, expense.getAmount());
+        values.put(Expense.COLUMN_TYPE, expense.getType());
+        values.put(Expense.COLUMN_CATEGORIES, expense.getCategories());
+        values.put(Expense.COLUMN_CURRENCY, expense.getCurrency());
 
         long id = db.insert(Expense.TABLE_NAME, null, values);
 

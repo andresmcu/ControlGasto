@@ -11,6 +11,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -18,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.andres.controlgasto.database.DatabaseAccess;
-import com.example.andres.controlgasto.database.SQLiteAccess;
+import com.example.andres.controlgasto.database.WebServiceAccess;
 import com.example.andres.controlgasto.database.model.Expense;
 import com.example.andres.controlgasto.utils.MyDividerItemDecoration;
 import com.example.andres.controlgasto.utils.RecyclerTouchListener;
@@ -50,9 +52,15 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view);
         noNotesView = findViewById(R.id.empty_expenses_view);
 
-        db = new SQLiteAccess(this);
+        // db = new SQLiteAccess(this);
+        db = new WebServiceAccess(this);
+        List<Expense> expenses = db.getAllExpenses();
+        if (expenses != null)
+            Log.i("HomeActivity", expenses.size() + " gastos recuperados en UI.");
+        else
+            Log.i("HomeActivity", "La lista expenses está nula.");
 
-        expensesList.addAll(db.getAllExpenses());
+        expensesList.addAll(expenses);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -95,9 +103,11 @@ public class HomeActivity extends AppCompatActivity {
      * and refreshing the list
      */
     private void createExpense(Expense expense) {
-        Toast.makeText(HomeActivity.this, "Entramos en el createExpense().", Toast.LENGTH_SHORT).show();
+        DateFormat df = new DateFormat();
+        String date = df.format("yyyy-MM-dd HH:mm:ss", new Date()).toString();
 
-        long id = db.insertExpense(expense.getDate(), expense.getName(), expense.getAmount(), expense.getType(), expense.getCategories(), expense.getCurrency());
+        expense.setDate(date);
+        long id = db.insertExpense(expense);
 
         Expense n = db.getExpense(id);
 
@@ -111,6 +121,7 @@ public class HomeActivity extends AppCompatActivity {
 
             toggleEmptyExpenses();
         }
+
     }
 
     /**

@@ -13,12 +13,12 @@ public class Expense {
     public static final String COLUMN_CURRENCY = "currency";
 
     private int ID;
-    private String Name;
     private String Date;
-    private String Type;
+    private String Name;
     private double Amount;
-    private String Currency;
+    private String Type;
     private String Categories;
+    private String Currency;
 
     public static final String CREATE_TABLE =
             "CREATE TABLE " + TABLE_NAME + "("
