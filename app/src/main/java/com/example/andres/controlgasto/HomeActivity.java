@@ -24,6 +24,7 @@ import com.example.andres.controlgasto.database.WebServiceAccess;
 import com.example.andres.controlgasto.database.model.Expense;
 import com.example.andres.controlgasto.utils.MyDividerItemDecoration;
 import com.example.andres.controlgasto.utils.RecyclerTouchListener;
+import com.example.andres.controlgasto.utils.Utils;
 import com.example.andres.controlgasto.view.ExpensesAdapter;
 
 import java.text.SimpleDateFormat;
@@ -54,7 +55,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // db = new SQLiteAccess(this);
         db = new WebServiceAccess(this);
-        List<Expense> expenses = db.getAllExpenses();
+        List<Expense> expenses = db.getAllExpenses(Utils._USER);
         if (expenses != null)
             Log.i("HomeActivity", expenses.size() + " gastos recuperados en UI.");
         else
@@ -255,7 +256,7 @@ public class HomeActivity extends AppCompatActivity {
                     String currentDate = sdf.format(new Date());
                     inputExpenseDate = currentDate;
 
-                    Expense expense = new Expense(inputExpenseDate, inputExpenseName.getText().toString(), inputExpenseAmountD, inputExpenseType.getText().toString(), inputExpenseCategories.getText().toString(), inputExpenseCurrency.getText().toString());
+                    Expense expense = new Expense(Utils._USER, inputExpenseDate, inputExpenseName.getText().toString(), inputExpenseAmountD, inputExpenseType.getText().toString(), inputExpenseCategories.getText().toString(), inputExpenseCurrency.getText().toString());
                     createExpense(expense);
                 }
             }

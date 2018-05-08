@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.andres.controlgasto.HomeActivity;
 import com.example.andres.controlgasto.database.model.Expense;
+import com.example.andres.controlgasto.utils.Utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -32,11 +33,6 @@ import static android.content.ContentValues.TAG;
 
 public class WebServiceAccess implements DatabaseAccess {
 
-    private final String _PROTOCOL = "http";
-    private final String _HOST = "192.168.1.7";
-    private final int _PORT = 8080;
-    private final String _FILE = "/Expenses";
-
     private static Context mContext;
 
     public WebServiceAccess(Context context) {
@@ -48,7 +44,7 @@ public class WebServiceAccess implements DatabaseAccess {
         RESTAccess restaccess = new RESTAccess();
         try {
             // Create URL
-            URL expenseURL = new URL(_PROTOCOL, _HOST, _PORT, _FILE + "/" + expense.getDate() + "/" + expense.getName() + "/" + expense.getAmount() + "/" + expense.getType() + "/" + expense.getCategories() + "/" + expense.getCurrency());
+            URL expenseURL = new URL(Utils._WS_PROTOCOL, Utils._WS_HOST, Utils._WS_PORT, Utils._WS_FILE + "/" + Utils._USER + "/" + expense.getDate() + "/" + expense.getName() + "/" + expense.getAmount() + "/" + expense.getType() + "/" + expense.getCategories() + "/" + expense.getCurrency());
             restaccess.execute(expenseURL);
         } catch (MalformedURLException e) {
             Log.e(TAG, "WebServiceAccess.insertExpense() MalformedURLException: " + e.getMessage());
@@ -58,13 +54,13 @@ public class WebServiceAccess implements DatabaseAccess {
         return 1;
     }
 
-    public List<Expense> getAllExpenses(){
+    public List<Expense> getAllExpenses(String user){
         RESTAccess restaccess = new RESTAccess();
         List<Expense> expenses = null;
 
         try {
             // Create URL
-            URL expenseURL = new URL(_PROTOCOL, _HOST, _PORT, _FILE + "/all");
+            URL expenseURL = new URL(Utils._WS_PROTOCOL, Utils._WS_HOST, Utils._WS_PORT, Utils._WS_FILE + "/getAll/" + user);
             restaccess.execute(expenseURL);
             expenses = restaccess.get();
         } catch (MalformedURLException e) {
@@ -101,13 +97,12 @@ public class WebServiceAccess implements DatabaseAccess {
                     StringBuilder sb = new StringBuilder();
                     String line;
                     while ((line = reader.readLine()) != null)
-                    {
                         sb.append(line + "\n");
-                    }
+
                     JsonArray jArray = new JsonParser().parse(sb.toString()).getAsJsonArray();
                     for (int i = 0; i < jArray.size(); i++) {
                         JsonObject jsonObject = jArray.get(i).getAsJsonObject();
-                        expenses.add(new Expense(jsonObject.get("id").getAsInt(), jsonObject.get("date").getAsString(), jsonObject.get("name").getAsString(), jsonObject.get("amount").getAsDouble(), jsonObject.get("type").getAsString(), jsonObject.get("categories").getAsString(), jsonObject.get("currency").getAsString()));
+                        expenses.add(new Expense(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString(), jsonObject.get("date").getAsString(), jsonObject.get("name").getAsString(), jsonObject.get("amount").getAsDouble(), jsonObject.get("type").getAsString(), jsonObject.get("categories").getAsString(), jsonObject.get("currency").getAsString()));
                     }
                 } else {
                     Log.i(TAG, "AsyncTask() Error! connection.getResponseCode(): " + connection.getResponseCode());

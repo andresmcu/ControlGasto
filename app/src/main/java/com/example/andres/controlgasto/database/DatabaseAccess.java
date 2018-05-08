@@ -9,7 +9,7 @@ public interface DatabaseAccess {
     int updateExpense(Expense expense);
     void deleteExpense (Expense expense);
     Expense getExpense(long id);
-    List<Expense> getAllExpenses();
+    List<Expense> getAllExpenses(String user);
     int getExpensesCount();
 
 }

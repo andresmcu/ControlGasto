@@ -5,6 +5,7 @@ import java.util.List;
 public class Expense {
     public static final String TABLE_NAME = "Expenses";
     public static final String COLUMN_ID = "id";
+    public static final String COLUMN_USER = "user";
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_AMOUNT = "amount";
@@ -13,6 +14,7 @@ public class Expense {
     public static final String COLUMN_CURRENCY = "currency";
 
     private int ID;
+    private String User;
     private String Date;
     private String Name;
     private double Amount;
@@ -23,6 +25,7 @@ public class Expense {
     public static final String CREATE_TABLE =
             "CREATE TABLE " + TABLE_NAME + "("
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + COLUMN_USER + "TEXT, "
                     + COLUMN_DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
                     + COLUMN_NAME + " TEXT, "
                     + COLUMN_AMOUNT + " REAL, "
@@ -33,8 +36,9 @@ public class Expense {
 
     public Expense() {}
 
-    public Expense(int ID, String Date, String Name, double Amount, String Type, String Categories, String Currency) {
+    public Expense(int ID, String User, String Date, String Name, double Amount, String Type, String Categories, String Currency) {
         this.ID = ID;
+        this.User = User;
         this.Date = Date;
         this.Name = Name;
         this.Amount = Amount;
@@ -43,7 +47,8 @@ public class Expense {
         this.Currency = Currency;
     }
 
-    public Expense(String Date, String Name, double Amount, String Type, String Categories, String Currency) {
+    public Expense(String User, String Date, String Name, double Amount, String Type, String Categories, String Currency) {
+        this.User = User;
         this.Date = Date;
         this.Name = Name;
         this.Amount = Amount;
@@ -60,6 +65,10 @@ public class Expense {
     public void setID(int ID) {
         this.ID = ID;
     }
+
+    public String getUser() { return User; }
+
+    public void setUser(String User) { this.User = User; }
 
     public String getName() {
         return Name;

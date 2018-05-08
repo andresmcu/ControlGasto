@@ -74,10 +74,9 @@ public class SQLiteAccess extends SQLiteOpenHelper implements DatabaseAccess {
         // get readable database as we are not inserting anything
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String[] campos = new String[] {"ID", "Date", "Name", "Amount", "Type", "Categories", "Currency"};
+        String[] campos = new String[] {"ID", "User", "Date", "Name", "Amount", "Type", "Categories", "Currency"};
         String[] args = new String[] {String.valueOf(id)};
 
-        Expense expensePrueba = new Expense(01, "date","name",05, "type","cat1","euro");
         Expense expense = null;
 
         Cursor cursor = null;
@@ -92,15 +91,14 @@ public class SQLiteAccess extends SQLiteOpenHelper implements DatabaseAccess {
 
                 expense = new Expense(
                         cursor.getInt(cursor.getColumnIndex(Expense.COLUMN_ID)),
-                        cursor.getString(cursor.getColumnIndex(Expense.COLUMN_DATE)),
+                        cursor.getString(cursor.getColumnIndex(Expense.COLUMN_USER)),
                         cursor.getString(cursor.getColumnIndex(Expense.COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndex(Expense.COLUMN_DATE)),
                         cursor.getDouble(cursor.getColumnIndex(Expense.COLUMN_AMOUNT)),
                         cursor.getString(cursor.getColumnIndex(Expense.COLUMN_TYPE)),
                         cursor.getString(cursor.getColumnIndex(Expense.COLUMN_CATEGORIES)),
                         cursor.getString(cursor.getColumnIndex(Expense.COLUMN_CURRENCY))
                 );
-
-
             }
         } catch(SQLiteException e) {
 
@@ -112,27 +110,28 @@ public class SQLiteAccess extends SQLiteOpenHelper implements DatabaseAccess {
         return expense;
     }
 
-    public List<Expense> getAllExpenses() {
+    public List<Expense> getAllExpenses(String u) {
         List<Expense> expenses = new ArrayList<Expense>();
 
         /* Select All query */
-        String query = "SELECT * FROM " + Expense.TABLE_NAME + " ORDER BY " + Expense.COLUMN_DATE + " DESC";
+        String query = "SELECT * FROM " + Expense.TABLE_NAME + " WHERE user = '" + u + "' ORDER BY " + Expense.COLUMN_DATE + " DESC";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
-                Expense expense = new Expense();
-                expense.setID(cursor.getInt(cursor.getColumnIndex(Expense.COLUMN_ID)));
-                expense.setName(cursor.getString(cursor.getColumnIndex(Expense.COLUMN_NAME)));
-                expense.setType(cursor.getString(cursor.getColumnIndex(Expense.COLUMN_TYPE)));
-                expense.setDate(cursor.getString(cursor.getColumnIndex(Expense.COLUMN_DATE)));
-                expense.setAmount(cursor.getDouble(cursor.getColumnIndex(Expense.COLUMN_AMOUNT)));
-                expense.setCurrency(cursor.getString(cursor.getColumnIndex(Expense.COLUMN_CURRENCY)));
-                expense.setCategory(cursor.getString(cursor.getColumnIndex(Expense.COLUMN_CATEGORIES)));
-
-                expenses.add(expense);
+                expenses.add(new Expense(
+                        cursor.getInt(cursor.getColumnIndex(Expense.COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndex(Expense.COLUMN_USER)),
+                        cursor.getString(cursor.getColumnIndex(Expense.COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndex(Expense.COLUMN_DATE)),
+                        cursor.getDouble(cursor.getColumnIndex(Expense.COLUMN_AMOUNT)),
+                        cursor.getString(cursor.getColumnIndex(Expense.COLUMN_TYPE)),
+                        cursor.getString(cursor.getColumnIndex(Expense.COLUMN_CATEGORIES)),
+                        cursor.getString(cursor.getColumnIndex(Expense.COLUMN_CURRENCY))
+                        )
+                );
             } while(cursor.moveToNext());
         }
 
